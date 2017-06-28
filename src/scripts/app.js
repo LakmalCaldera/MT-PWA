@@ -33,6 +33,9 @@
    }
 
    app.navigateToBranchList = function(branches){
+    // update header
+    app.updateHeader("Select a branch:");
+
     // Show branch list
     app.showBranchList();
 
@@ -55,6 +58,9 @@
 
 
   app.navigateToServiceList = function(services){
+    // update header
+    app.updateHeader("Select a service:");
+
     // Show service list
     app.showServiceList();
 
@@ -73,6 +79,18 @@
     $('.list-btn').on('click', function(event){
       alert('Clicked');
     });
+  }
+
+  app.updateHeader = function(_title){
+    // Get template
+    var template = Handlebars.compile($("#header-template").html());
+    $('#header').html(template({title: _title}));
+
+    $('#butRefresh').on('click', function() {
+    // Refresh all of the forecasts
+      app.getBranches();
+    });
+
   }
 
   /*****************************************************************************
@@ -136,6 +154,7 @@
           var data = JSON.parse(request.response);
           data.forEach(function(item){
             item.id = item.serviceId;
+            item.name = item.serviceName;
           });
           callback(data);
         }
