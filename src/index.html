@@ -18,14 +18,22 @@
 </head>
 <body>
   <header class="header">
-    <h1 class="header__title">Mobile Ticket - PWA</h1>
+    <h1 class="header__title">Mobile Ticket</h1>
   </header>
+  <main class="main">
+  <section id="branch">
+    <div id="branch__list">
+    </div>
+  </section>
+  </main>
 
-  <div id="branch-list">
-  </div>
+  <section id="service">
+    <div id="service__list">
+    </div>
+  </section>
 
   <script id="btn-template" type="text/x-handlebars-template">
-    <div class="branch-btn">
+    <div class="list-btn" data-id="{{id}}">
       <h6>{{name}}</h6>
     </div>
   </script>
