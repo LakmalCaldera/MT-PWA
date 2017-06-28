@@ -1,0 +1,30 @@
+{
+    "apigw_ip_port": {
+        "value": "10.2.2.210:9090",
+        "description": "API Gateway - host address"
+    },
+    "local_webserver_port": {
+        "value": "81",
+        "description": "Local webserver port"
+    },
+    "auth_token": {
+        "value": "1234",
+        "description": "Mobile API user - authentication token"
+    },
+    "local_webserver_ssl_port": {
+        "value": "4443",
+        "description": "Local webserver HTTPS port"
+    },
+    "support_ssl": {
+        "value": "true",
+        "description": "Flag indicating server supports SSL.Should have a valid public key and certificate in 'sslcert' folder "
+    },
+    "gateway_has_certificate": {
+        "value": "false",
+        "description": "Flag indicating the API gateway is configured to run on HTTPS"
+    },
+    "gateway_certificate_is_valid": {
+        "value": "false",
+        "description": "Flag indicating the configured SSL certificate in the API gateway is a valid. This setting is active only if 'gateway_has_certificate' is true. This must be set to 'false' if API gateway is configured with a self signed certificate "
+    }
+}
