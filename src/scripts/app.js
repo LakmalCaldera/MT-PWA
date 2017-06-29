@@ -4,8 +4,7 @@
 // var webPush = require('web-push');
 $(document).ready(function () {
 
-  var applicationServerPublicKey = 'BIUvWSVujYgGhGhou6oQJU6WvPrOZVz9O0msPtQg7LzVUSeuONiBJyKL279UoHeTc0BeR_7md14degrOmVkTeGQ';
-  var vapidPrivateKey = 'BlYO4-nOoPbjkctNoCSRGU4TN4_JBn8HT0lEQA-QRUg';
+  var applicationServerPublicKey = 'BIXD8Wr-HJTQQwsvR3KvwHak-tIs_o0x4DH7HId162-wFPQkQidrLTBV92n8MlJ_AFHlTYjKIthLV2N4U8S9cuE';
 
   // const pushButton = document.querySelector('.js-push-btn');
 
@@ -75,7 +74,8 @@ $(document).ready(function () {
     // Setup Eventhandlers
     $('.list-btn').on('click', function (event) {
       // alert('Clicked');
-      // sendPushMsg('Hello there!');
+      
+      sendPushMsg($(this).attr('data-id'));
     });
   }
 
@@ -280,6 +280,20 @@ $(document).ready(function () {
     }
   }
 
+  function sendPushMsg(payload) {
+     $.ajax({
+        type: "POST",
+        url: "notify",
+        // The key needs to match your method's input parameter (case-sensitive).
+        data: JSON.stringify({ msg: payload }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {},
+        failure: function (errMsg) {
+        }
+      });
+  }
+
 
   function updateSubscription() {
     if (Notification.permission === 'denied') {
@@ -308,15 +322,15 @@ $(document).ready(function () {
 
 
   function urlB64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
+    var padding = '='.repeat((4 - base64String.length % 4) % 4);
+    var base64 = (base64String + padding)
       .replace(/\-/g, '+')
       .replace(/_/g, '/');
 
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
+    var rawData = window.atob(base64);
+    var outputArray = new Uint8Array(rawData.length);
 
-    for (let i = 0; i < rawData.length; ++i) {
+    for (var i = 0; i < rawData.length; ++i) {
       outputArray[i] = rawData.charCodeAt(i);
     }
     return outputArray;

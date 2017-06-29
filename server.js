@@ -14,6 +14,8 @@ var sslPort = '4443';
 var supportSSL = false;
 var validAPIGWCert = "1";
 var APIGWHasSSL = true;
+var subscriptionJson = {};
+var payload = "";
 
 
 
@@ -107,43 +109,29 @@ else {
 
 app.use(bodyParser.json());
 
-app.get('/notification*', function (req, res) {
-	console.log('helloworld!');
-	res.status(200).send('helloworld!');
-	sendPushMsg('hello');
+app.post('/notify', function(req, res) {
+	var payload = req.body.msg;
+	console.log('/notify ' + payload);
+	sendPushMsg(payload, subscriptionJson);
 })
 
 app.post('/notification', function (req, res) {
 	// res.status(200).send(req.body);
-	console.log('====================> ' + JSON.stringify(req.body.sub));
+	console.log('/notification ' + JSON.stringify(req.body.sub));
 	// sendPushMsg("Hello there!", JSON.stringify(req.body.sub));
 
-	var subscriptionJson = req.body.sub;
-	var payload = "hello there";
-	var options = {
-		vapidDetails: {
-			subject: 'mailto:prasad.era@gmail.com',
-			publicKey: 'BIUvWSVujYgGhGhou6oQJU6WvPrOZVz9O0msPtQg7LzVUSeuONiBJyKL279UoHeTc0BeR_7md14degrOmVkTeGQ',
-			privateKey: 'BlYO4-nOoPbjkctNoCSRGU4TN4_JBn8HT0lEQA-QRUg'
-		},
-		TTL: 60
-	};
-
-	webPush.sendNotification(
-		subscriptionJson,
-		payload,
-		options
-	);
+	subscriptionJson = req.body.sub;
+	// sendPushMsg('payload', subscriptionJson);
 });
 
 function sendPushMsg(payload, subscriptionJson) {
 	// var requirejs = require('requirejs');
-	console.log('++++++++++++++ ' + subscriptionJson);
+	console.log('sendPushMsg() ' + subscriptionJson);
 	var options = {
 		vapidDetails: {
 			subject: 'mailto:prasad.era@gmail.com',
-			publicKey: 'BIUvWSVujYgGhGhou6oQJU6WvPrOZVz9O0msPtQg7LzVUSeuONiBJyKL279UoHeTc0BeR_7md14degrOmVkTeGQ',
-			privateKey: 'BlYO4-nOoPbjkctNoCSRGU4TN4_JBn8HT0lEQA-QRUg'
+			publicKey: 'BIXD8Wr-HJTQQwsvR3KvwHak-tIs_o0x4DH7HId162-wFPQkQidrLTBV92n8MlJ_AFHlTYjKIthLV2N4U8S9cuE',
+			privateKey: 'NCzQA0CdXsJeDo4c2rWvk81U2d1cChrUoR99QDpNUc8'
 		},
 		TTL: 60
 	};

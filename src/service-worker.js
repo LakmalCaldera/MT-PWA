@@ -80,3 +80,43 @@ self.addEventListener('fetch', function(e) {
     );
   }
 });
+
+self.addEventListener('push', function(event) {
+  console.log('[Service Worker] Push Received.');
+  console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
+
+  const title = 'Push Codelab';
+  const options = {
+    body: event.data.text(),
+    icon: 'images/icon.png',
+    badge: 'images/badge.png',
+	data: {
+          dateOfArrival: Date.now(),
+          primaryKey: 1
+        },
+        actions: [
+          {action: 'explore', title: 'Explore this new world',
+            icon: 'images/checkmark.png'},
+          {action: 'close', title: 'Close notification',
+            icon: 'images/xmark.png'},
+        ]
+
+  };
+
+  const notificationPromise = self.registration.showNotification(title, options);
+event.waitUntil(notificationPromise);
+
+});
+
+self.addEventListener('notificationclick', function(event) {
+  console.log('[Service Worker] Notification click Received.');
+
+  if (event.action === 'close') {
+    event.notification.close();
+  }
+  else {
+  event.waitUntil(
+    clients.openWindow('https://developers.google.com/web/')
+  );
+  }
+});
