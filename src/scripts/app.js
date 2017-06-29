@@ -38,8 +38,8 @@ $(document).ready(function () {
     var template = Handlebars.compile($("#btn-template").html());
 
     // Empty content
-    $('#branch__list').html = "";
-
+    $('#branch__list').html("");
+    
     // Load in new data
     branches.forEach(function (branch) {
       $('#branch__list').append(template(branch));
@@ -63,8 +63,8 @@ $(document).ready(function () {
     var template = Handlebars.compile($("#btn-template").html());
 
     // Empty content
-    $('#service__list').html = "";
-
+    $('#service__list').html("");
+    
     // Load in new data
     services.forEach(function (service) {
       $('#service__list').append(template(service));
@@ -81,9 +81,9 @@ $(document).ready(function () {
     var template = Handlebars.compile($("#header-template").html());
     $('#header').html(template({ title: _title }));
 
-    $('#butRefresh').on('click', function () {
-      // Refresh all of the forecasts
-      app.getBranches();
+    $('#butRefresh').on('click', function() {
+    // Refresh all of the forecasts
+      app.getBranches(app.navigateToBranchList);
     });
 
   }
@@ -159,6 +159,7 @@ $(document).ready(function () {
     request.send();
   };
 
+    app.getBranches(app.navigateToBranchList);
 
   app.getBranches(app.navigateToBranchList);
 
