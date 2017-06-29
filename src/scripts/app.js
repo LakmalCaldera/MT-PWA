@@ -170,7 +170,7 @@ $(document).ready(function () {
     console.log('Service Worker and Push is supported');
 
 
-    navigator.serviceWorker.register('./service-worker.js')
+    navigator.serviceWorker.register('./service-worker.js', {scope: '/' })
       .then(function (swReg) {
         console.log('Service Worker is registered', swReg);
 
