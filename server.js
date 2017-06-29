@@ -1,10 +1,11 @@
 var proxy = require('express-http-proxy');
+const bodyParser = require('body-parser');
 var express = require('express');
 var fs = require('fs');
 var https = require('https');
 var path = require('path');
 var app = express();
-
+var webPush = require('web-push');
 var configFile = 'proxy-config.json';
 var host = 'localhost:9090';
 var authToken = 'nosecrets';
@@ -13,6 +14,8 @@ var sslPort = '4443';
 var supportSSL = false;
 var validAPIGWCert = "1";
 var APIGWHasSSL = true;
+
+
 
 //update configurations using config.json
 var configuration = JSON.parse(
@@ -23,9 +26,9 @@ host = configuration.apigw_ip_port.value;
 port = configuration.local_webserver_port.value;
 authToken = configuration.auth_token.value;
 sslPort = configuration.local_webserver_ssl_port.value;
-supportSSL = (configuration.support_ssl.value.trim() === 'true')?true:false;
-validAPIGWCert = (configuration.gateway_certificate_is_valid.value.trim()=== 'true')?"1":"0";
-APIGWHasSSL = (configuration.gateway_has_certificate.value.trim()=== 'true')?true:false;
+supportSSL = (configuration.support_ssl.value.trim() === 'true') ? true : false;
+validAPIGWCert = (configuration.gateway_certificate_is_valid.value.trim() === 'true') ? "1" : "0";
+APIGWHasSSL = (configuration.gateway_has_certificate.value.trim() === 'true') ? true : false;
 
 
 //this will bypass certificate errors in node to API gateway encrypted channel, if set to '1'
@@ -44,22 +47,22 @@ app.use(express.static(__dirname + '/src'));
 
 // Redirect no_visit requests to index.html
 app.get('/no_visit$', function (req, res) {
-  res.sendFile(path.join(__dirname + '/src', 'index.html'));
+	res.sendFile(path.join(__dirname + '/src', 'index.html'));
 });
 
 // Redirect all requests that start with branches and end, to index.html
 app.get('/branches*', function (req, res) {
-  res.sendFile(path.join(__dirname + '/src', 'index.html'));
+	res.sendFile(path.join(__dirname + '/src', 'index.html'));
 });
 
 // Redirect all requests that start with services and end, to index.html
 app.get('/services$', function (req, res) {
-  res.sendFile(path.join(__dirname + '/src', 'index.html'));
+	res.sendFile(path.join(__dirname + '/src', 'index.html'));
 });
 
 // Redirect all requests that start with ticket info and end, to index.html
 app.get('/ticket$', function (req, res) {
-  res.sendFile(path.join(__dirname + '/src', 'index.html'));
+	res.sendFile(path.join(__dirname + '/src', 'index.html'));
 });
 
 // Proxy mobile example to API gateway
@@ -92,13 +95,64 @@ if (supportSSL) {
 		console.log("Mobile Ticket app listening at https://%s:%s over SSL", listenAddress, listenPort);
 	});
 }
-else{
+else {
 	var server = app.listen(port, function () {  										// port the mobileTicket will listen to.
-	var listenAddress = server.address().address;
-	var listenPort = server.address().port;
+		var listenAddress = server.address().address;
+		var listenPort = server.address().port;
 
-	console.log("Mobile Ticket app listening at http://%s:%s", listenAddress, listenPort);
+		console.log("Mobile Ticket app listening at http://%s:%s", listenAddress, listenPort);
 
+	});
+}
+
+app.use(bodyParser.json());
+
+app.get('/notification*', function (req, res) {
+	console.log('helloworld!');
+	res.status(200).send('helloworld!');
+	sendPushMsg('hello');
+})
+
+app.post('/notification', function (req, res) {
+	// res.status(200).send(req.body);
+	console.log('====================> ' + JSON.stringify(req.body.sub));
+	// sendPushMsg("Hello there!", JSON.stringify(req.body.sub));
+
+	var subscriptionJson = req.body.sub;
+	var payload = "hello there";
+	var options = {
+		vapidDetails: {
+			subject: 'mailto:prasad.era@gmail.com',
+			publicKey: 'BIUvWSVujYgGhGhou6oQJU6WvPrOZVz9O0msPtQg7LzVUSeuONiBJyKL279UoHeTc0BeR_7md14degrOmVkTeGQ',
+			privateKey: 'BlYO4-nOoPbjkctNoCSRGU4TN4_JBn8HT0lEQA-QRUg'
+		},
+		TTL: 60
+	};
+
+	webPush.sendNotification(
+		subscriptionJson,
+		payload,
+		options
+	);
 });
+
+function sendPushMsg(payload, subscriptionJson) {
+	// var requirejs = require('requirejs');
+	console.log('++++++++++++++ ' + subscriptionJson);
+	var options = {
+		vapidDetails: {
+			subject: 'mailto:prasad.era@gmail.com',
+			publicKey: 'BIUvWSVujYgGhGhou6oQJU6WvPrOZVz9O0msPtQg7LzVUSeuONiBJyKL279UoHeTc0BeR_7md14degrOmVkTeGQ',
+			privateKey: 'BlYO4-nOoPbjkctNoCSRGU4TN4_JBn8HT0lEQA-QRUg'
+		},
+		TTL: 60
+	};
+
+	webPush.sendNotification(
+		subscriptionJson,
+		payload,
+		options
+	);
+
 }
 

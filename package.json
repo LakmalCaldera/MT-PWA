@@ -11,7 +11,9 @@
     "express-http-proxy": "^0.10.1",
     "iconv-lite": "^0.4.18",
     "raw-body": "^2.2.0",
-    "unpipe": "^1.0.0"
+    "requirejs": "^2.3.3",
+    "unpipe": "^1.0.0",
+    "web-push": "^3.2.2"
   },
   "devDependencies": {},
   "scripts": {

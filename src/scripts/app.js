@@ -1,16 +1,18 @@
 
 
-'use strict';
 
+// var webPush = require('web-push');
 $(document).ready(function () {
 
-  const applicationServerPublicKey = 'BBI9nw-rWN9YN59sLwSGq3p3EhoOlgacvvo_CmzVzTvmAeVZ3zkRz2iHPc50UxMRGE-i7By5VhleiuB99bxojJ4';
+  var applicationServerPublicKey = 'BIUvWSVujYgGhGhou6oQJU6WvPrOZVz9O0msPtQg7LzVUSeuONiBJyKL279UoHeTc0BeR_7md14degrOmVkTeGQ';
+  var vapidPrivateKey = 'BlYO4-nOoPbjkctNoCSRGU4TN4_JBn8HT0lEQA-QRUg';
 
-  const pushButton = document.querySelector('.js-push-btn');
+  // const pushButton = document.querySelector('.js-push-btn');
 
-  let isSubscribed = false;
-  let swRegistration = null;
+  var isSubscribed = false;
+  var swRegistration = null;
   var app = {};
+  var subscriptionJson = {};
 
   /*****************************************************************************
    *
@@ -72,7 +74,8 @@ $(document).ready(function () {
 
     // Setup Eventhandlers
     $('.list-btn').on('click', function (event) {
-      alert('Clicked');
+      // alert('Clicked');
+      // sendPushMsg('Hello there!');
     });
   }
 
@@ -179,7 +182,7 @@ $(document).ready(function () {
       });
   } else {
     console.warn('Push messaging is not supported');
-    pushButton.textContent = 'Push Not Supported';
+    // pushButton.textContent = 'Push Not Supported';
   }
 
   function initialiseUI() {
@@ -189,22 +192,25 @@ $(document).ready(function () {
         isSubscribed = !(subscription === null);
 
         if (isSubscribed) {
-          console.log('User IS subscribed.');
+          console.log('User IS already subscribed.');
+          updateSubscriptionOnServer(subscription);
         } else {
           console.log('User is NOT subscribed.');
+          subscribeUser();
         }
 
-        updateBtn();
+        // updateBtn();
+        updateSubscription();
       });
 
-    pushButton.addEventListener('click', function () {
-      pushButton.disabled = true;
-      if (isSubscribed) {
-        unsubscribeUser();
-      } else {
-        subscribeUser();
-      }
-    });
+    // pushButton.addEventListener('click', function () {
+    //   pushButton.disabled = true;
+    //   if (isSubscribed) {
+    //     unsubscribeUser();
+    //   } else {
+    //     subscribeUser();
+    //   }
+    // });
   }
 
   function subscribeUser() {
@@ -220,11 +226,11 @@ $(document).ready(function () {
 
         isSubscribed = true;
 
-        updateBtn();
+        // updateBtn();
       })
       .catch(function (err) {
         console.log('Failed to subscribe the user: ', err);
-        updateBtn();
+        // updateBtn();
       });
   }
 
@@ -244,42 +250,59 @@ $(document).ready(function () {
         console.log('User is unsubscribed.');
         isSubscribed = false;
 
-        updateBtn();
+        // updateBtn();
+        // updateSubscription();
       });
   }
 
 
   function updateSubscriptionOnServer(subscription) {
     // TODO: Send subscription to application server
-
-    const subscriptionJson = document.querySelector('.js-subscription-json');
-    const subscriptionDetails =
-      document.querySelector('.js-subscription-details');
-
     if (subscription) {
       subscriptionJson.textContent = JSON.stringify(subscription);
-      subscriptionDetails.classList.remove('is-invisible');
+      $.ajax({
+        type: "POST",
+        url: "notification",
+        // The key needs to match your method's input parameter (case-sensitive).
+        data: JSON.stringify({ sub: subscription }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {},
+        failure: function (errMsg) {
+        }
+      });
+
+      console.log('Subscrition response: ' + subscriptionJson.textContent);
+      // subscriptionDetails.classList.remove('is-invisible');
     } else {
-      subscriptionDetails.classList.add('is-invisible');
+      // subscriptionDetails.classList.add('is-invisible');
+      console.log('Subscription not success');
     }
   }
 
 
+  function updateSubscription() {
+    if (Notification.permission === 'denied') {
+      updateSubscriptionOnServer(null);
+      return;
+    }
+  }
+
   function updateBtn() {
     if (Notification.permission === 'denied') {
-      pushButton.textContent = 'Push Messaging Blocked.';
-      pushButton.disabled = true;
+      // pushButton.textContent = 'Push Messaging Blocked.';
+      // pushButton.disabled = true;
       updateSubscriptionOnServer(null);
       return;
     }
 
     if (isSubscribed) {
-      pushButton.textContent = 'Disable Push Messaging';
+      // pushButton.textContent = 'Disable Push Messaging';
     } else {
-      pushButton.textContent = 'Enable Push Messaging';
+      // pushButton.textContent = 'Enable Push Messaging';
     }
 
-    pushButton.disabled = false;
+    // pushButton.disabled = false;
   }
 
 
@@ -298,6 +321,8 @@ $(document).ready(function () {
     }
     return outputArray;
   }
+
+
 
 
 });
