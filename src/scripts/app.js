@@ -164,25 +164,33 @@ window.onload = function () {
     request.send();
   };
 
-  app.getBranches(app.navigateToBranchList);
-
-  if ('serviceWorker' in navigator && 'PushManager' in window) {
+  /*if ('serviceWorker' in navigator && 'PushManager' in window) {
     console.log('Service Worker and Push is supported');
     navigator.serviceWorker.register('./service-worker.js', { scope: '/' })
       .then(function (swReg) {
         console.log('Service Worker is registered', swReg);
 
-          swRegistration = swReg;
-          initialiseUI();
+          //swRegistration = swReg;
+          //initialiseUI();
         })
         .catch(function (error) {
           console.error('Service Worker Error', error);
         });
   } else {
     console.warn('Push messaging is not supported');
+  }*/
+
+
+  app.getBranches(app.navigateToBranchList);
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+        .register('./service-worker.js')
+        .then(function() { console.log('Service Worker Registered'); });
   }
 
-  function initialiseUI() {
+
+/*  function initialiseUI() {
     // Set the initial subscription value
     swRegistration.pushManager.getSubscription()
         .then(function (subscription) {
@@ -294,6 +302,9 @@ window.onload = function () {
     }
     return outputArray;
   }
+*/
+
+
 
 
 };

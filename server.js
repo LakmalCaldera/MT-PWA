@@ -48,7 +48,7 @@ if (supportSSL) {
 app.use(express.static(__dirname + '/src'));
 
 // Redirect no_visit requests to index.html
-app.get('/no_visit$', function (req, res) {
+/*app.get('/no_visit$', function (req, res) {
 	res.sendFile(path.join(__dirname + '/src', 'index.html'));
 });
 
@@ -65,7 +65,8 @@ app.get('/services$', function (req, res) {
 // Redirect all requests that start with ticket info and end, to index.html
 app.get('/ticket$', function (req, res) {
 	res.sendFile(path.join(__dirname + '/src', 'index.html'));
-});
+});*/
+
 
 // Proxy mobile example to API gateway
 var apiProxy = proxy(host, {									// ip and port off apigateway
@@ -106,6 +107,7 @@ else {
 	});
 }
 
+/*
 app.use(bodyParser.json());
 
 app.post('/notify', function(req, res) {
@@ -136,5 +138,5 @@ function sendPushMsg(payload, subscriptionJson) {
 		options
 	);
 
-}
+}*/
 
