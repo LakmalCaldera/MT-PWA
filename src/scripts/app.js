@@ -75,7 +75,7 @@ $(document).ready(function () {
     $('.list-btn').on('click', function (event) {
       // alert('Clicked');
       
-      sendPushMsg($(this).attr('data-id'));
+      sendPushMsg('service id: ' + $(this).attr('data-id'));
     });
   }
 
