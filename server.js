@@ -101,7 +101,6 @@ else {
 	var server = app.listen(port, function () {  										// port the mobileTicket will listen to.
 		var listenAddress = server.address().address;
 		var listenPort = server.address().port;
-
 		console.log("Mobile Ticket app listening at http://%s:%s", listenAddress, listenPort);
 
 	});
@@ -116,17 +115,12 @@ app.post('/notify', function(req, res) {
 })
 
 app.post('/notification', function (req, res) {
-	// res.status(200).send(req.body);
 	console.log('/notification ' + JSON.stringify(req.body.sub));
-	// sendPushMsg("Hello there!", JSON.stringify(req.body.sub));
-
 	subscriptionJson = req.body.sub;
-	// sendPushMsg('payload', subscriptionJson);
 });
 
 function sendPushMsg(payload, subscriptionJson) {
-	// var requirejs = require('requirejs');
-	console.log('sendPushMsg() ' + subscriptionJson);
+	console.log('=================== sendPushMsg() to FCM' + JSON.stringify(subscriptionJson));
 	var options = {
 		vapidDetails: {
 			subject: 'mailto:prasad.era@gmail.com',

@@ -40,7 +40,7 @@ $(document).ready(function () {
 
     // Empty content
     $('#branch__list').html("");
-    
+
     // Load in new data
     branches.forEach(function (branch) {
       $('#branch__list').append(template(branch));
@@ -65,7 +65,7 @@ $(document).ready(function () {
 
     // Empty content
     $('#service__list').html("");
-    
+
     // Load in new data
     services.forEach(function (service) {
       $('#service__list').append(template(service));
@@ -74,7 +74,7 @@ $(document).ready(function () {
     // Setup Eventhandlers
     $('.list-btn').on('click', function (event) {
       // alert('Clicked');
-      
+
       sendPushMsg('service id: ' + $(this).attr('data-id'));
     });
   }
@@ -84,8 +84,8 @@ $(document).ready(function () {
     var template = Handlebars.compile($("#header-template").html());
     $('#header').html(template({ title: _title }));
 
-    $('#butRefresh').on('click', function() {
-    // Refresh all of the forecasts
+    $('#butRefresh').on('click', function () {
+      // Refresh all of the forecasts
       app.getBranches(app.navigateToBranchList);
     });
 
@@ -162,15 +162,11 @@ $(document).ready(function () {
     request.send();
   };
 
-    app.getBranches(app.navigateToBranchList);
-
   app.getBranches(app.navigateToBranchList);
 
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     console.log('Service Worker and Push is supported');
-
-
-    navigator.serviceWorker.register('./service-worker.js', {scope: '/' })
+    navigator.serviceWorker.register('./service-worker.js', { scope: '/' })
       .then(function (swReg) {
         console.log('Service Worker is registered', swReg);
 
@@ -182,7 +178,6 @@ $(document).ready(function () {
       });
   } else {
     console.warn('Push messaging is not supported');
-    // pushButton.textContent = 'Push Not Supported';
   }
 
   function initialiseUI() {
@@ -198,19 +193,8 @@ $(document).ready(function () {
           console.log('User is NOT subscribed.');
           subscribeUser();
         }
-
-        // updateBtn();
         updateSubscription();
       });
-
-    // pushButton.addEventListener('click', function () {
-    //   pushButton.disabled = true;
-    //   if (isSubscribed) {
-    //     unsubscribeUser();
-    //   } else {
-    //     subscribeUser();
-    //   }
-    // });
   }
 
   function subscribeUser() {
@@ -221,16 +205,12 @@ $(document).ready(function () {
     })
       .then(function (subscription) {
         console.log('User is subscribed.');
-
         updateSubscriptionOnServer(subscription);
-
         isSubscribed = true;
 
-        // updateBtn();
       })
       .catch(function (err) {
         console.log('Failed to subscribe the user: ', err);
-        // updateBtn();
       });
   }
 
@@ -246,12 +226,8 @@ $(document).ready(function () {
       })
       .then(function () {
         updateSubscriptionOnServer(null);
-
         console.log('User is unsubscribed.');
         isSubscribed = false;
-
-        // updateBtn();
-        // updateSubscription();
       });
   }
 
@@ -267,31 +243,31 @@ $(document).ready(function () {
         data: JSON.stringify({ sub: subscription }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
-        success: function (data) {},
+        success: function (data) { },
         failure: function (errMsg) {
         }
       });
-
       console.log('Subscrition response: ' + subscriptionJson.textContent);
-      // subscriptionDetails.classList.remove('is-invisible');
     } else {
-      // subscriptionDetails.classList.add('is-invisible');
       console.log('Subscription not success');
     }
   }
 
   function sendPushMsg(payload) {
-     $.ajax({
-        type: "POST",
-        url: "notify",
-        // The key needs to match your method's input parameter (case-sensitive).
-        data: JSON.stringify({ msg: payload }),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (data) {},
-        failure: function (errMsg) {
-        }
-      });
+    $.ajax({
+      type: "POST",
+      url: "notify",
+      // The key needs to match your method's input parameter (case-sensitive).
+      data: JSON.stringify({ msg: payload }),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function (data) {
+        console.log('sendPushMsg success:' + data);
+      },
+      failure: function (errMsg) {
+        console.error('sendPushMsg faild', errMsg);
+      }
+    });
   }
 
 
@@ -301,25 +277,6 @@ $(document).ready(function () {
       return;
     }
   }
-
-  function updateBtn() {
-    if (Notification.permission === 'denied') {
-      // pushButton.textContent = 'Push Messaging Blocked.';
-      // pushButton.disabled = true;
-      updateSubscriptionOnServer(null);
-      return;
-    }
-
-    if (isSubscribed) {
-      // pushButton.textContent = 'Disable Push Messaging';
-    } else {
-      // pushButton.textContent = 'Enable Push Messaging';
-    }
-
-    // pushButton.disabled = false;
-  }
-
-
 
   function urlB64ToUint8Array(base64String) {
     var padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -335,9 +292,6 @@ $(document).ready(function () {
     }
     return outputArray;
   }
-
-
-
 
 });
 

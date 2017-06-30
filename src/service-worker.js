@@ -88,8 +88,8 @@ self.addEventListener('push', function (event) {
   const title = 'You will be served shortly.';
   const options = {
     body: event.data.text(),
-    icon: 'images/icon.png',
-    badge: 'images/badge.png',
+    icon: 'icon.png',
+    badge: 'icon.png',
     data: {
       dateOfArrival: Date.now(),
       primaryKey: 1
