@@ -2,7 +2,7 @@
 
 
 // var webPush = require('web-push');
-$(document).ready(function () {
+window.onload = function () {
 
   var applicationServerPublicKey = 'BIXD8Wr-HJTQQwsvR3KvwHak-tIs_o0x4DH7HId162-wFPQkQidrLTBV92n8MlJ_AFHlTYjKIthLV2N4U8S9cuE';
 
@@ -82,7 +82,7 @@ $(document).ready(function () {
   app.updateHeader = function (_title) {
     // Get template
     var template = Handlebars.compile($("#header-template").html());
-    $('#header').html(template({ title: _title }));
+    $('#header').html(template({title: _title}));
 
     $('#butRefresh').on('click', function () {
       // Refresh all of the forecasts
@@ -121,7 +121,8 @@ $(document).ready(function () {
           var data = JSON.parse(request.response);
           callback(data);
         }
-      };
+      }
+      ;
     };
     request.open('GET', url);
     request.send();
@@ -156,7 +157,8 @@ $(document).ready(function () {
           });
           callback(data);
         }
-      };
+      }
+      ;
     };
     request.open('GET', url);
     request.send();
@@ -170,12 +172,12 @@ $(document).ready(function () {
       .then(function (swReg) {
         console.log('Service Worker is registered', swReg);
 
-        swRegistration = swReg;
-        initialiseUI();
-      })
-      .catch(function (error) {
-        console.error('Service Worker Error', error);
-      });
+          swRegistration = swReg;
+          initialiseUI();
+        })
+        .catch(function (error) {
+          console.error('Service Worker Error', error);
+        });
   } else {
     console.warn('Push messaging is not supported');
   }
@@ -183,8 +185,8 @@ $(document).ready(function () {
   function initialiseUI() {
     // Set the initial subscription value
     swRegistration.pushManager.getSubscription()
-      .then(function (subscription) {
-        isSubscribed = !(subscription === null);
+        .then(function (subscription) {
+          isSubscribed = !(subscription === null);
 
         if (isSubscribed) {
           console.log('User IS already subscribed.');
@@ -240,7 +242,7 @@ $(document).ready(function () {
         type: "POST",
         url: "notification",
         // The key needs to match your method's input parameter (case-sensitive).
-        data: JSON.stringify({ sub: subscription }),
+        data: JSON.stringify({sub: subscription}),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) { },
@@ -281,8 +283,8 @@ $(document).ready(function () {
   function urlB64ToUint8Array(base64String) {
     var padding = '='.repeat((4 - base64String.length % 4) % 4);
     var base64 = (base64String + padding)
-      .replace(/\-/g, '+')
-      .replace(/_/g, '/');
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
 
     var rawData = window.atob(base64);
     var outputArray = new Uint8Array(rawData.length);
@@ -293,5 +295,6 @@ $(document).ready(function () {
     return outputArray;
   }
 
-});
+
+};
 
